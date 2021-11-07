@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api"; // подключаем node-telegram-bot-api
-import fetch from "node-fetch";
+import axios from "axios";
 const token = "2042088420:AAGUIPmmCCpNfvyS6t5uIlePn38LIptzFoA"; // тут токен кторый мы получили от botFather
 
 // включаем самого обота
@@ -33,15 +33,16 @@ bot.on("callback_query", (query) => {
   const chatId = query.message.chat.id;
 
   if (query.data === "morePes") {
-    fetch("https://dog.ceo/api/breeds/image/random")
-      .then((responce) => responce.json())
-      .then((picture) =>
+    axios
+      .get("https://dog.ceo/api/breeds/image/random")
+      .then(function (responce) {
+        console.log(responce.data);
+        let picture = responce.data;
         bot.sendMessage(chatId, picture.message, {
           reply_markup: {
             inline_keyboard: keyboard,
           },
-        })
-      );
+        });
+      });
   }
 });
-bot.on("polling_error", console.log);
